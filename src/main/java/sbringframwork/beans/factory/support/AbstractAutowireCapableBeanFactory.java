@@ -5,7 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import sbringframwork.beans.BeansException;
 import sbringframwork.beans.PropertyValue;
 import sbringframwork.beans.PropertyValues;
+import sbringframwork.beans.factory.DisposableBean;
 import sbringframwork.beans.factory.InitializingBean;
+import sbringframwork.beans.factory.aware.Aware;
+import sbringframwork.beans.factory.aware.BeanClassLoaderAware;
+import sbringframwork.beans.factory.aware.BeanFactoryAware;
+import sbringframwork.beans.factory.aware.BeanNameAware;
 import sbringframwork.beans.factory.config.AutowireCapableBeanFactory;
 import sbringframwork.beans.factory.config.BeanDefinition;
 import sbringframwork.beans.factory.config.BeanPostProcessor;
@@ -34,8 +39,24 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
             throw new BeansException("Instantiation of bean failed", e);
         }
 
-        addSingleton(beanName, bean);
+        // 注册实现了 DisposableBean 接口的 Bean 对象
+        registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
+
+
+        // 判断 SCOPE_SINGLETON、SCOPE_PROTOTYPE，还要判断是否要执行销毁方法，在registerDisposableBeanIfNecessary中
+        if (beanDefinition.isSingleton()) {
+            addSingleton(beanName, bean);
+        }
         return bean;
+    }
+
+    protected void registerDisposableBeanIfNecessary(String beanName, Object bean, BeanDefinition beanDefinition) {
+        // 非 Singleton 类型的 Bean 不执行销毁方法
+        if (!beanDefinition.isSingleton()) return;
+
+        if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
+            registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
+        }
     }
 
     public InstantiationStrategy getInstantiationStrategy() {
@@ -47,28 +68,41 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
     }
 
     private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
-        // 1. 执行 BeanPostProcessor Before 处理
+        // 1. invokeAwareMethods 设置感知
+        if (bean instanceof Aware) {
+            if (bean instanceof BeanFactoryAware) {
+                ((BeanFactoryAware) bean).setBeanFactory(this);
+            }
+            if (bean instanceof BeanClassLoaderAware){
+                ((BeanClassLoaderAware) bean).setBeanClassLoader(getBeanClassLoader());
+            }
+            if (bean instanceof BeanNameAware) {
+                ((BeanNameAware) bean).setBeanName(beanName);
+            }
+        }
+
+        // 2. 执行 BeanPostProcessor Before 处理
         Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 
-        // 执行 Bean 对象的初始化方法
+        // 3. 执行 Bean 对象的初始化方法
         try {
             invokeInitMethods(beanName, wrappedBean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("调用Bean：[" + beanName + "] 的初始化方法失败。", e);
         }
 
-        // 2. 执行 BeanPostProcessor After 处理
+        // 4. 执行 BeanPostProcessor After 处理
         wrappedBean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
         return wrappedBean;
     }
 
     private void invokeInitMethods(String beanName, Object bean, BeanDefinition beanDefinition) throws Exception {
-        // 1. 判断Bean是否实现了接口 InitializingBean
+        // 1. 判断Bean是否实现了接口 InitializingBean，如果实现了就初始化
         if (bean instanceof InitializingBean) {
             ((InitializingBean) bean).afterPropertiesSet();
         }
 
-        // 2. 配置信息 init-method
+        // 2. 看配置信息（Spring.xml）中Bean有没有 init-method，有的话也要调用
         String initMethodName = beanDefinition.getInitMethodName();
         if (StrUtil.isNotEmpty(initMethodName)) {
             Method initMethod;

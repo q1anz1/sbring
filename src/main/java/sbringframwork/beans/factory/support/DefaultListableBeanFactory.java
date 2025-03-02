@@ -4,8 +4,6 @@ import sbringframwork.beans.BeansException;
 import sbringframwork.beans.factory.ConfigurableListableBeanFactory;
 import sbringframwork.beans.factory.DisposableBean;
 import sbringframwork.beans.factory.config.BeanDefinition;
-import sbringframwork.beans.factory.support.AbstractAutowireCapableBeanFactory;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,8 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ConfigurableListableBeanFactory {
-    private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
-    private final Map<String, DisposableBean> disposableBeans = new LinkedHashMap<>();
+    private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
     @Override
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
@@ -65,20 +62,5 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     @Override
     public void preInstantiateSingletons() throws BeansException {
         beanDefinitionMap.keySet().forEach(this::getBean);
-    }
-
-    public void destroySingletons() {
-        Set<String> keySet = this.disposableBeans.keySet();
-        Object[] disposableBeanNames = keySet.toArray();
-
-        for (int i = disposableBeanNames.length - 1; i >= 0; i--) {
-            Object beanName = disposableBeanNames[i];
-            DisposableBean disposableBean = disposableBeans.remove(beanName);
-            try {
-                disposableBean.destroy();
-            } catch (Exception e) {
-                throw new BeansException("Destroy method on bean with name '" + beanName + "' threw an exception", e);
-            }
-        }
     }
 }
