@@ -1,4 +1,4 @@
-package sbringframwork.test;
+package sbringframwork.test.beans;
 
 import java.util.HashMap;
 import java.util.Map;

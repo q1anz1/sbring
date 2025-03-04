@@ -1,4 +1,4 @@
-package sbringframwork.test;
+package sbringframwork.test.beans;
 
 import org.junit.Test;
 import sbringframwork.context.support.ClassPathXmlApplicationContext;

@@ -21,7 +21,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
                 return clazz.getDeclaredConstructor().newInstance();
             }
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new BeansException("Failed to instantiate [" + clazz.getName() + "]", e);
+            throw new BeansException("实例化[" + clazz.getName() + "]失败：", e);
         }
     }
 

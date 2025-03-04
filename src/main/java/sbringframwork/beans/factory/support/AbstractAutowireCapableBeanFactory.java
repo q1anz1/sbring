@@ -11,10 +11,7 @@ import sbringframwork.beans.factory.aware.Aware;
 import sbringframwork.beans.factory.aware.BeanClassLoaderAware;
 import sbringframwork.beans.factory.aware.BeanFactoryAware;
 import sbringframwork.beans.factory.aware.BeanNameAware;
-import sbringframwork.beans.factory.config.AutowireCapableBeanFactory;
-import sbringframwork.beans.factory.config.BeanDefinition;
-import sbringframwork.beans.factory.config.BeanPostProcessor;
-import sbringframwork.beans.factory.config.BeanReference;
+import sbringframwork.beans.factory.config.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -30,13 +27,22 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException {
         Object bean;
         try {
+            // 判断是否返回代理 Bean 对象
+            bean = resolveBeforeInstantiation(beanName, beanDefinition);
+            if (null != bean) {
+                return bean;
+            }
+
+            // 实例化
             bean = createBeanInstance(beanDefinition, beanName, args);
+
             // 给 Bean 填充属性
             applyPropertyValues(beanName, bean, beanDefinition);
+
             // 执行 Bean 的初始化方法和 BeanPostProcessor 的前置和后置处理方法
             bean = initializeBean(beanName, bean, beanDefinition);
         } catch (Exception e) {
-            throw new BeansException("Instantiation of bean failed", e);
+            throw new BeansException("实例化Bean失败：", e);
         }
 
         // 注册实现了 DisposableBean 接口的 Bean 对象
@@ -166,8 +172,37 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
                 BeanUtil.setFieldValue(bean, name, value);
             }
         } catch (Exception e) {
-            throw new BeansException("Error setting property values：" + beanName);
+            throw new BeansException("填充属性失败，beanName: " + beanName + "，原因：", e);
         }
     }
 
+    protected Object resolveBeforeInstantiation(String beanName, BeanDefinition beanDefinition) {
+        Object bean = applyBeanPostProcessorBeforeInstantiation(beanDefinition.getBeanClass(), beanName);
+        if (null != bean) {
+            bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+        }
+        return bean;
+    }
+
+    /*
+    * 注意，此方法为新增方法，与 “applyBeanPostProcessorBeforeInitialization” 是两个方法。
+    *
+    * 在Spring容器尝试实例化一个bean之前，这个方法会遍历所有注册的BeanPostProcessor实现。
+    * 如果某个BeanPostProcessor同时实现了InstantiationAwareBeanPostProcessor接口，那么它的postProcessBeforeInstantiation方法将被调用。
+    *
+    * postProcessBeforeInstantiation方法可以返回一个非null的对象，这个对象将作为该bean的实例，从而跳过默认的实例化逻辑。这在创建代理对象或返回缓存对象时非常有用。
+    * 如果postProcessBeforeInstantiation返回了null，则Spring容器将继续按照正常流程实例化bean。
+    *
+    * 在Spring AOP中，这个机制被用来创建代理对象。例如，如果一个bean被标记为需要某种类型的增强（advice），
+    * 那么相应的InstantiationAwareBeanPostProcessor实现可能会在postProcessBeforeInstantiation方法中返回一个代理对象，而不是直接实例化目标bean。
+    * */
+    public Object applyBeanPostProcessorBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+        for (BeanPostProcessor processor : getBeanPostProcessors()) {
+            if (processor instanceof InstantiationAwareBeanPostProcessor) {
+                Object result = ((InstantiationAwareBeanPostProcessor)processor).postProcessBeforeInstantiation(beanClass, beanName);
+                if (null != result) return result;
+            }
+        }
+        return null;
+    }
 }

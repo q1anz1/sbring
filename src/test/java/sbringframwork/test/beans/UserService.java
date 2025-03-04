@@ -1,4 +1,4 @@
-package sbringframwork.test;
+package sbringframwork.test.beans;
 
 import sbringframwork.beans.factory.DisposableBean;
 import sbringframwork.beans.factory.InitializingBean;
