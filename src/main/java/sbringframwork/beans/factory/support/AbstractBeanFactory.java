@@ -5,6 +5,7 @@ import sbringframwork.beans.factory.FactoryBean;
 import sbringframwork.beans.factory.config.BeanDefinition;
 import sbringframwork.beans.factory.config.BeanPostProcessor;
 import sbringframwork.beans.factory.config.ConfigurableBeanFactory;
+import sbringframwork.core.util.StringValueResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     private final ClassLoader beanClassLoader = this.getClass().getClassLoader();
 
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+
+    /**
+     * String resolvers to apply e.g. to annotation attribute values
+     */
+    private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
 
     @Override
     public Object getBean(String name) throws BeansException {
@@ -60,6 +66,20 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
         this.beanPostProcessors.remove(beanPostProcessor);
         this.beanPostProcessors.add(beanPostProcessor);
+    }
+
+    @Override
+    public void addEmbeddedValueResolver(StringValueResolver valueResolver) {
+        this.embeddedValueResolvers.add(valueResolver);
+    }
+
+    @Override
+    public String resolveEmbeddedValue(String value) {
+        String result = value;
+        for (StringValueResolver resolver : this.embeddedValueResolvers) {
+            result = resolver.resolveStringValue(result);
+        }
+        return result;
     }
 
     public List<BeanPostProcessor> getBeanPostProcessors() {

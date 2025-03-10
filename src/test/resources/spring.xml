@@ -2,7 +2,7 @@
 <beans>
     <bean class="sbringframwork.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 
-    <bean id="userService" class="sbringframwork.test.beans.UserService"/>
+    <bean id="userService" class="sbringframwork.test.aop.UserService"/>
 
     <bean id="beforeAdvice" class="sbringframwork.test.aop.UserServiceBeforeAdvice"/>
 

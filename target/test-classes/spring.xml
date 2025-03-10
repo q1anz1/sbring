@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean class="sbringframwork.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+    <bean class="sbringframwork.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator123"/>
 
-    <bean id="userService" class="sbringframwork.test.beans.UserService"/>
+    <bean id="userService" class="sbringframwork.test.aop.UserService"/>
 
     <bean id="beforeAdvice" class="sbringframwork.test.aop.UserServiceBeforeAdvice"/>
 
