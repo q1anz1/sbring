@@ -11,6 +11,8 @@ import sbringframwork.beans.factory.BeanFactory;
 import sbringframwork.beans.factory.aware.BeanFactoryAware;
 import sbringframwork.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import sbringframwork.beans.factory.support.DefaultListableBeanFactory;
+import sbringframwork.stereotype.Component;
+
 import java.util.Collection;
 
 /**
@@ -20,6 +22,7 @@ import java.util.Collection;
  * 包括：目标对象、拦截方法、匹配器，之后返回代理对象即可。
  * 那么现在调用方获取到的这个 Bean 对象就是一个已经被切面注入的对象了，当调用方法的时候，则会被按需拦截，处理用户需要的信息。
  */
+@Component
 public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
     private DefaultListableBeanFactory beanFactory;
 

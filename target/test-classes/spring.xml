@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean class="sbringframwork.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator123"/>
+<!--    <bean class="sbringframwork.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>-->
+<!--    <context:component-scan base-package="sbringframwork.test.aop"/>-->
 
-    <bean id="userService" class="sbringframwork.test.aop.UserService"/>
-
-    <bean id="beforeAdvice" class="sbringframwork.test.aop.UserServiceBeforeAdvice"/>
-
-    <bean id="methodInterceptor" class="sbringframwork.aop.framework.adapter.MethodBeforeAdviceInterceptor">
-        <property name="advice" ref="beforeAdvice"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test01?useSSL=false&amp;serverTimezone=UTC"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
     </bean>
 
-    <bean id="pointcutAdvisor" class="sbringframwork.aop.aspectj.AspectJExpressionPointcutAdvisor">
-        <property name="expression" value="execution(* sbringframwork.test.aop.IUserService.*(..))"/>
-        <property name="advice" ref="methodInterceptor"/>
+    <bean id="jdbcTemplate"
+          class="sbringframwork.jdbc.support.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
 </beans>
