@@ -3,7 +3,7 @@ package sbringframwork.context.support;
 import sbringframwork.beans.BeansException;
 
 /**
- *
+ * 一个主要使用的类。
  */
 public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContext {
     private String[] configLocations;

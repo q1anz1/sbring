@@ -1,5 +1,9 @@
 package sbringframwork.core.util;
 
+import cn.hutool.core.lang.Assert;
+
+import java.lang.reflect.Method;
+
 /**
  *
  */
@@ -33,5 +37,10 @@ public class ClassUtils {
      */
     public static boolean isCglibProxyClassName(String className) {
         return (className != null && className.contains("$$"));
+    }
+
+    public static String getQualifiedMethodName(Method method, Class<?> clazz) {
+        Assert.notNull(method, "Method must not be null");
+        return (clazz != null ? clazz : method.getDeclaringClass()).getName() + "." + method.getName();
     }
 }

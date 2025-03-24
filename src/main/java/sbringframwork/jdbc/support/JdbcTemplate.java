@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * That's it!
  */
 public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 
