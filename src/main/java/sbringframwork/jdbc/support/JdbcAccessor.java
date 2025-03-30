@@ -26,7 +26,6 @@ public abstract class JdbcAccessor implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        // TODO 为什么要检查？
         if (null == getDataSource()) {
             throw new IllegalArgumentException("Property 'datasource' is required");
         }

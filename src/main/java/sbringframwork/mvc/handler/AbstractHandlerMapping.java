@@ -146,7 +146,6 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
         return UrlPathHelper.defaultInstance.removeSemicolonContent(requestPath);
     }
 
-    // FIXME: 报错
 //    private RequestPath getRequestPath(HttpServletRequest request) {
 //        // Expect pre-parsed path with DispatcherServlet,
 //        // but otherwise parse per handler lookup + cache for handling

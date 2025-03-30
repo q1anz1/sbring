@@ -13,6 +13,10 @@ public class PropertyValues {
         this.propertyValueList.add(propertyValue);
     }
 
+    public void addPropertyValues(PropertyValues propertyValues) {
+        propertyValueList.addAll(propertyValues.getPropertyValueList());
+    }
+
     public List<PropertyValue> getPropertyValueList() {
         return propertyValueList;
     }

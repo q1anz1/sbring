@@ -10,7 +10,6 @@ import java.io.Serializable;
 public abstract class AbstractPlatformTransactionManager implements PlatformTransactionManager, Serializable {
     private int defaultTimeout = TransactionDefinition.TIMEOUT_DEFAULT;
 
-
     @Override
     public final TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
         Object transaction = doGetTransaction();

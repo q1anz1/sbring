@@ -43,6 +43,7 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
             // 处理循环依赖，将实例化后的Bean对象提前放入缓存中暴露出来
             if (beanDefinition.isSingleton()) {
                 Object finalBean = bean;
+                // 看看是不是被代理了
                 addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, beanDefinition, finalBean));
             }
 
@@ -58,7 +59,7 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
             // 执行 Bean 的初始化方法和 BeanPostProcessor 的前置和后置处理方法
             bean = initializeBean(beanName, bean, beanDefinition);
         } catch (Exception e) {
-            throw new BeansException("实例化 Bean 异常：", e);
+            throw new BeansException("实例化 Bean 异常：" + beanName, e);
         }
 
         // 注册实现了 DisposableBean 接口的 Bean 对象
@@ -223,6 +224,7 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
         }
     }
 
+    // 对象实例化前执行
     protected Object resolveBeforeInstantiation(String beanName, BeanDefinition beanDefinition) {
         Object bean = applyBeanPostProcessorBeforeInstantiation(beanDefinition.getBeanClass(), beanName);
         if (null != bean) {
@@ -245,7 +247,7 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
     * */
     public Object applyBeanPostProcessorBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
         for (BeanPostProcessor processor : getBeanPostProcessors()) {
-            if (processor instanceof InstantiationAwareBeanPostProcessor) {
+            if (processor instanceof InstantiationAwareBeanPostProcessor ) {
                 Object result = ((InstantiationAwareBeanPostProcessor)processor).postProcessBeforeInstantiation(beanClass, beanName);
                 if (null != result) return result;
             }
@@ -265,9 +267,7 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
             if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor){
                 PropertyValues pvs = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).postProcessPropertyValues(beanDefinition.getPropertyValues(), bean, beanName);
                 if (null != pvs) {
-                    for (PropertyValue propertyValue : pvs.getPropertyValueList()) {
-                        beanDefinition.getPropertyValues().addPropertyValue(propertyValue);
-                    }
+                    beanDefinition.getPropertyValues().addPropertyValues(pvs);
                 }
             }
         }

@@ -256,6 +256,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
             // 获得适配器
             HandlerAdapter ha = getHandlerAdapter(handlerExecutionChain.getHandlerMethod());
+            // 拦截器开始逐一判断是否拦截
             if (!handlerExecutionChain.applyPreInterceptor(req, resp)) {
                 return;
             }

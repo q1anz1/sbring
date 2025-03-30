@@ -1,6 +1,6 @@
 package sbringframwork.jdbc.datasource;
 
-import sbringframwork.jdbc.CannotGetJdbcConnectionException;
+import sbringframwork.jdbc.exception.CannotGetJdbcConnectionException;
 import sbringframwork.tx.TransactionSynchronizationManager;
 
 import javax.sql.DataSource;

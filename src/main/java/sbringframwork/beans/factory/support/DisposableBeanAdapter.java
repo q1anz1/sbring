@@ -15,7 +15,6 @@ import java.lang.reflect.Method;
  * 这个 DisposableBeanAdapter 自己也是个 DisposableBean。
  */
 public class DisposableBeanAdapter implements DisposableBean {
-
     private final Object bean;
     private final String beanName;
     private final String destroyMethodName;

@@ -22,7 +22,6 @@ import java.util.Collection;
  * 包括：目标对象、拦截方法、匹配器，之后返回代理对象即可。
  * 那么现在调用方获取到的这个 Bean 对象就是一个已经被切面注入的对象了，当调用方法的时候，则会被按需拦截，处理用户需要的信息。
  */
-@Component
 public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
     private DefaultListableBeanFactory beanFactory;
 
@@ -50,6 +49,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+
         if (isInfrastructureClass(bean.getClass())) return bean;
 
         Collection<AspectJExpressionPointcutAdvisor> advisors = beanFactory.getBeansOfType(AspectJExpressionPointcutAdvisor.class).values();
@@ -75,12 +75,12 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
     }
 
     @Override
-    public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
-        return pvs;
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+        return true;
     }
 
     @Override
-    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
-        return true;
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+        return pvs;
     }
 }

@@ -4,11 +4,9 @@ import sbringframwork.beans.factory.HierarchicalBeanFactory;
 import sbringframwork.core.util.StringValueResolver;
 
 /**
- * 可配置的BeanFactory，...
- *
+ * 增加了一点功能。
  */
 public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
-    // TODO 补充说明
     String SCOPE_SINGLETON = "singleton";
     String SCOPE_PROTOTYPE = "prototype";
 

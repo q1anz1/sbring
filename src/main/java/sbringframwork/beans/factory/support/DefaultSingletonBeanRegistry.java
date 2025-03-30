@@ -19,7 +19,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     // 一级缓存，用于存放完全初始化好的 bean，从该缓存中取出的 bean 可以直接使用
     private final Map<String, Object> singletonObjects = new HashMap<>();
 
-    // 二级缓存，提前曝光的单例对象的cache，存放原始的 bean 对象（尚未填充属性），用于解决循环依赖
+    // 二级缓存，提前曝光的单例对象的cache，存放原始的 bean 对象（可能被代理）（尚未填充属性），用于解决循环依赖
     protected final Map<String, Object> earlySingletonObjects = new HashMap<>();
 
     // 三级缓存，单例对象工厂的cache，存放 bean 工厂对象，用于解决循环依赖
@@ -46,10 +46,6 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
         return singletonObject;
     }
 
-    protected void addSingleton(String beanName, Object singletonObject) {
-        singletonObjects.put(beanName, singletonObject);
-    }
-
     public void destroySingletons() {
         Set<String> keySet = this.disposableBeans.keySet();
         Object[] disposableBeanNames = keySet.toArray();
@@ -71,6 +67,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
         singletonFactories.remove(beanName);
     }
 
+    // Bean只要一被实例化就会马上放入三级缓存中
     protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
         if (!this.singletonObjects.containsKey(beanName)) {
             this.singletonFactories.put(beanName, singletonFactory);

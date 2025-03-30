@@ -1,6 +1,6 @@
 package sbringframwork.jdbc.core;
 
-import sbringframwork.jdbc.IncorrectResultSetColumnCountException;
+import sbringframwork.jdbc.exception.IncorrectResultSetColumnCountException;
 import sbringframwork.jdbc.support.JdbcUtils;
 import sbringframwork.util.NumberUtils;
 
@@ -28,7 +28,7 @@ public class SingleColumnRowMapper<T> implements RowMapper<T> {
         if (columnCount != 1) {
             throw new IncorrectResultSetColumnCountException(1, columnCount);
         }
-        Object result = getColumnValue(rs, rowNum, this.requireType);
+        Object result = getColumnValue(rs, 1, this.requireType);
         if (result != null && this.requireType != null && !this.requireType.isInstance(result)) {
             // Extracted value does not match already: try to convert it.
             try {
@@ -64,10 +64,6 @@ public class SingleColumnRowMapper<T> implements RowMapper<T> {
                 return NumberUtils.parseNumber(value.toString(), (Class<Number>) requiredType);
             }
         }
-        //这里暂时不添加spring-core里的类型转换处理
-//        else if (this.conversionService != null && this.conversionService.canConvert(value.getClass(), requiredType)) {
-//            return this.conversionService.convert(value, requiredType);
-//        }
         else {
             throw new IllegalArgumentException(
                     "Value [" + value + "] is of type [" + value.getClass().getName() +

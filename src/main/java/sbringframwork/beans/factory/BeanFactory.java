@@ -3,7 +3,7 @@ package sbringframwork.beans.factory;
 import sbringframwork.beans.BeansException;
 
 /**
- * 邪恶父亲。
+ * 邪恶的父亲。
  */
 public interface BeanFactory {
     Object getBean(String name) throws BeansException;

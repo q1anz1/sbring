@@ -12,7 +12,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
      * The returned bean object may be a proxy to use instead of the target bean,
      * effectively suppressing default instantiation of the target bean.
      *
-     * 在 Bean 对象执行初始化方法之前，执行此方法
+     * 在 Bean 对象实例化之前，执行此方法
      *
      * @param beanClass
      * @param beanName
@@ -36,9 +36,11 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
      */
     PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException;
 
+    // 在 Bean 未初始化完之前就能得到引用
     default Object getEarlyBeanReference(Object bean, String beanName) {
         return bean;
     }
 
+    // 用于条件性中断初始化，或者与其他生命周期回调配合
     boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException;
 }

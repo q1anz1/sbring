@@ -58,12 +58,11 @@ public class ServletInvocableHandlerMethod extends HandlerMethod {
      * 执行方法逻辑
      */
     public void invokeAndHandle(WebServletRequest webServletRequest, HandlerMethod handler, Object... providerArgs) throws Exception {
-
-        // 1.获取参数
+        // 1. 获取参数
         final Object[] methodArguments = getMethodArguments(webServletRequest, handlerMethod, providerArgs);
-        // 2.执行
+        // 2. 执行
         final Object returnValue = doInvoke(methodArguments);
-        // 3.选择返回值处理器，处理执行后的返回值
+        // 3. 选择返回值处理器，处理执行后的返回值
         this.returnValueHandlerComposite.doInvoke(returnValue, handler.getMethod(), webServletRequest);
     }
 
@@ -74,7 +73,6 @@ public class ServletInvocableHandlerMethod extends HandlerMethod {
         final MethodParameter[] parameters = handlerMethod.getParameters();
         Object[] args = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
-
             final MethodParameter parameter = parameters[i];
             //parameter要拿到name需要初始化填充
             parameter.initParameterNameDiscovery(nameDiscoverer);

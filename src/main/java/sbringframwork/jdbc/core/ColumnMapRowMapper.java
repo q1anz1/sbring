@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *
+ * 将数据库查询结果集（ResultSet）中的每一个行数据映射（或转换）为 Map<String, Object>。
  */
 public class ColumnMapRowMapper implements RowMapper<Map<String, Object>> {
     @Override

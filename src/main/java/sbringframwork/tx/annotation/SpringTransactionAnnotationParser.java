@@ -1,6 +1,7 @@
 package sbringframwork.tx.annotation;
 
-import org.springframework.core.annotation.AnnotatedElementUtils;
+
+import sbringframwork.core.annotation.AnnotatedElementUtils;
 import sbringframwork.core.annotation.AnnotationAttributes;
 import sbringframwork.tx.transaction.RuleBasedTransactionAttribute;
 import sbringframwork.tx.transaction.TransactionAttribute;
@@ -19,8 +20,7 @@ public class SpringTransactionAnnotationParser implements TransactionAnnotationP
     @Override
     public TransactionAttribute parseTransactionAnnotation(AnnotatedElement annotatedElement) {
         // TODO 什么鬼东西
-        AnnotationAttributes annotationAttributes =
-                AnnotatedElementUtils.findMergedAnnotationAttributes(annotatedElement, Transactional.class, false, false);
+        AnnotationAttributes annotationAttributes = AnnotatedElementUtils.findMergedAnnotationAttributes(annotatedElement, Transactional.class, false, false);
         if (null != annotationAttributes) {
             return parseTransactionAnnotation(annotationAttributes);
         } else {

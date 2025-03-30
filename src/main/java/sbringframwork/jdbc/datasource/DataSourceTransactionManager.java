@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- *
+ * 管理基于数据库连接（JDBC）的事务的核心类。
  */
 public class DataSourceTransactionManager extends AbstractPlatformTransactionManager implements InitializingBean {
     private DataSource dataSource;

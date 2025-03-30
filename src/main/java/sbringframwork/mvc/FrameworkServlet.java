@@ -189,7 +189,6 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
     /**
      * Close the WebApplicationContext of this servlet.
-     *
      */
     @Override
     public void destroy() {

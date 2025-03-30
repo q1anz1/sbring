@@ -2,7 +2,7 @@ package sbringframwork.jdbc.support;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import sbringframwork.jdbc.UncategorizedSQLException;
+import sbringframwork.jdbc.exception.UncategorizedSQLException;
 import sbringframwork.jdbc.core.*;
 import sbringframwork.jdbc.datasource.DataSourceUtils;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * That's it!
+ * 主要用的类。
  */
 public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 

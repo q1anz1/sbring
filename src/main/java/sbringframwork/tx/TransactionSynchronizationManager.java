@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 管理事务的生命周期和处理与事务相关的任务。
+ * 该组件为 Spring 提供了一种统一和灵活的方式来定义和配置事务的各种属性，使开发者能够根据不同的业务需求调整事务的行为。
  */
 public abstract class TransactionSynchronizationManager {
     /**

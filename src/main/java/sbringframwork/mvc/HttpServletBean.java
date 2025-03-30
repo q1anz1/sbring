@@ -9,10 +9,6 @@ import javax.servlet.http.HttpServlet;
 public class HttpServletBean extends HttpServlet {
     @Override
     public final void init() throws ServletException {
-        // 源码里面设置了 ServletConfigPropertyValues
-        // 不是很理解有什么作用？在哪里起作用？暂时不做实现
-
-        // Let subclasses do whatever initialization they like.
         initServletBean();
     }
 

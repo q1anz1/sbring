@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 拦截器
  */
 public class RequestMappingHandlerMapping extends AbstractHandlerMapping {
 

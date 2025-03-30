@@ -9,7 +9,6 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 
     private final boolean newTransaction;
 
-
     public DefaultTransactionStatus(Object transaction, boolean newTransaction) {
 
         this.transaction = transaction;

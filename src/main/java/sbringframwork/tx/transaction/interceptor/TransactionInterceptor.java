@@ -7,7 +7,7 @@ import sbringframwork.tx.transaction.PlatformTransactionManager;
 import java.io.Serializable;
 
 /**
- *
+ * 声明式事务管理的核心拦截器类。
  */
 public class TransactionInterceptor extends TransactionAspectSupport implements MethodInterceptor, Serializable {
 
