@@ -37,9 +37,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 
     }
 
-    protected DefaultTransactionStatus newTransactionStatus(TransactionDefinition definition,
-                                                            Object transaction, boolean newTransaction) {
-
+    protected DefaultTransactionStatus newTransactionStatus(TransactionDefinition definition, Object transaction, boolean newTransaction) {
         return new DefaultTransactionStatus(transaction, newTransaction);
     }
 
@@ -53,14 +51,11 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
     @Override
     public void commit(TransactionStatus status) throws TransactionException {
         if (status.isCompleted()) {
-            throw new IllegalArgumentException(
-                    "Transaction is already completed - do not call or rollback more than once per transaction");
+            throw new IllegalArgumentException("Transaction is already completed - do not call or rollback more than once per transaction");
         }
         DefaultTransactionStatus defStatus = (DefaultTransactionStatus) status;
 
-
         processCommit(defStatus);
-
     }
 
     private void processCommit(DefaultTransactionStatus status) throws TransactionException {

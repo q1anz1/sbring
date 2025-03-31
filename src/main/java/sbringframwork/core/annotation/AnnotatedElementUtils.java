@@ -13,8 +13,7 @@ public class AnnotatedElementUtils {
     private static final Annotation[] EMPTY_ANNOTATION_ARRAY = new Annotation[0];
 
 
-    public static AnnotationAttributes findMergedAnnotationAttributes(AnnotatedElement element,
-                                                                      Class<? extends Annotation> annotationType, boolean classValuesAsString, boolean nestedAnnotationsAsMap) {
+    public static AnnotationAttributes findMergedAnnotationAttributes(AnnotatedElement element, Class<? extends Annotation> annotationType, boolean classValuesAsString, boolean nestedAnnotationsAsMap) {
         return searchWithFindSemantics(element, annotationType, null, new MergedAnnotationAttributesProcessor(classValuesAsString, nestedAnnotationsAsMap));
     }
 

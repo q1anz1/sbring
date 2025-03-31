@@ -58,9 +58,6 @@ public abstract class AbstractBeanFactoryPointcutAdvisor extends AbstractPointcu
     }
 
     private void resetAdviceMonitor() {
-//        if (this.beanFactory instanceof ConfigurableBeanFactory){
-//            this.adviceMonitor= ((ConfigurableBeanFactory) this.beanFactory).getSingleton()
-//        }
         this.adviceMonitor = new Object();
     }
 }

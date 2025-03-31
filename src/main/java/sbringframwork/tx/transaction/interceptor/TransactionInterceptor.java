@@ -18,7 +18,6 @@ public class TransactionInterceptor extends TransactionAspectSupport implements 
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        return invokeWithinTransaction(invocation.getMethod(),
-                invocation.getThis().getClass(), invocation::proceed);
+        return invokeWithinTransaction(invocation.getMethod(), invocation.getThis().getClass(), invocation::proceed);
     }
 }

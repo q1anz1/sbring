@@ -12,13 +12,14 @@ import sbringframwork.jdbc.support.JdbcTemplate;
 import sbringframwork.test.tx.service.JdbcService;
 import sbringframwork.test.tx.service.impl.JdbcServiceImpl;
 import sbringframwork.tx.annotation.AnnotationTransactionAttributeSource;
+import sbringframwork.tx.annotation.Transactional;
 import sbringframwork.tx.transaction.interceptor.BeanFactoryTransactionAttributeSourceAdvisor;
 import sbringframwork.tx.transaction.interceptor.TransactionInterceptor;
 
 import javax.sql.DataSource;
 
 /**
- *
+ * @author zhangdd on 2022/2/27
  */
 public class TestTx {
     private JdbcTemplate jdbcTemplate;
@@ -35,7 +36,6 @@ public class TestTx {
     @Test
     public void jdbcWithTransaction() {
         JdbcService jdbcService = new JdbcServiceImpl();
-
         // 从注解查找 @Transactional
         AnnotationTransactionAttributeSource transactionAttributeSource = new AnnotationTransactionAttributeSource();
         transactionAttributeSource.findTransactionAttribute(jdbcService.getClass());

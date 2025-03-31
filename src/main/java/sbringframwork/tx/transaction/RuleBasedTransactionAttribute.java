@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 增加了对RollbackRule规则们进行单独的设置的DefaultTransactionAttribute。TransactionDefinition的子孙。
+ * 增加了对 RollbackRule 规则们进行单独的设置的DefaultTransactionAttribute。TransactionDefinition的子孙。
  */
 public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute implements Serializable {
 

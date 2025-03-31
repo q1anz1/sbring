@@ -17,8 +17,7 @@ import java.lang.reflect.Method;
  *
  */
 public abstract class TransactionAspectSupport implements BeanFactoryAware, InitializingBean {
-    private static final ThreadLocal<TransactionInfo> transactionInfoHolder =
-            new NamedThreadLocal<>("Current aspect-driven transaction");
+    private static final ThreadLocal<TransactionInfo> transactionInfoHolder = new NamedThreadLocal<>("Current aspect-driven transaction");
 
     private BeanFactory beanFactory;
 
@@ -27,24 +26,32 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
     private PlatformTransactionManager transactionManager;
 
 
-    protected Object invokeWithinTransaction(Method method, Class<?> targetClass,
-                                             InvocationCallback invocation)throws Throwable {
+    protected Object invokeWithinTransaction(Method method, Class<?> targetClass, InvocationCallback invocation)throws Throwable {
+        // 获得 this.TransactionAttributeSource 在第一步初始化中的那个
         TransactionAttributeSource tas = getTransactionAttributeSource();
-        TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
-
+        // 从 tas 获得 TransactionAttribute
+        TransactionAttribute txAttr = tas.getTransactionAttribute(method, targetClass);
+        // 获得 this.transactionManager，也是第一步初始化的那个
         PlatformTransactionManager tm = determineTransactionManager();
+        // 获取目标方法的唯一标识
         String joinpointIdentification = methodIdentification(method, targetClass);
+        // 一个内部类，封装入参
         TransactionInfo txInfo = createTransactionIfNecessary(tm, txAttr, joinpointIdentification);
-        Object retVal=null;
 
+        // 存储目标方法返回值
+        Object retVal;
         try {
-            retVal=invocation.proceedWithInvocation();
-        } catch (Throwable e) {
+            // 执行目标方法
+            retVal = invocation.proceedWithInvocation();
+        } catch (Exception e) {
+            // 抛异常就回滚
             completeTransactionAfterThrowing(txInfo, e);
             throw e;
-        }finally {
+        } finally {
+            // 清理 TransactionInfo
             cleanupTransactionInfo(txInfo);
         }
+        // 提交事务
         commitTransactionAfterReturning(txInfo);
 
         return retVal;
@@ -80,8 +87,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
         return ClassUtils.getQualifiedMethodName(method, targetClass);
     }
 
-    protected TransactionInfo createTransactionIfNecessary(PlatformTransactionManager tm,TransactionAttribute txAttr,
-                                                           String joinpointIdentification){
+    protected TransactionInfo createTransactionIfNecessary(PlatformTransactionManager tm, TransactionAttribute txAttr, String joinpointIdentification){
         if (txAttr != null && txAttr.getName() == null) {
             txAttr = new DelegatingTransactionAttribute(txAttr) {
                 @Override
@@ -111,14 +117,18 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 
     protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwable ex) {
         if (null != txInfo && null != txInfo.getTransactionStatus()) {
-
-            if (txInfo.transactionAttribute != null && txInfo.transactionAttribute.rollbackOn(ex)) {
+            // && txInfo.transactionAttribute.rollbackOn(ex)
+            if (txInfo.transactionAttribute != null ) {
+                // 异常类型是需要回滚的类型
                 try {
+                    // 回滚
                     txInfo.getTransactionManager().rollback(txInfo.getTransactionStatus());
+                    System.out.println("回滚完毕");
                 } catch (RuntimeException | Error ex2) {
                     throw ex2;
                 }
             } else {
+                // 异常类型不是需要回滚的类型，直接提交
                 try {
                     txInfo.getTransactionManager().commit(txInfo.getTransactionStatus());
                 } catch (Exception ex2) {

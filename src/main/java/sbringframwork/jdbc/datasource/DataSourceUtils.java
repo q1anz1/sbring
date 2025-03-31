@@ -21,12 +21,10 @@ public abstract class DataSourceUtils {
     }
 
     public static Connection doGetConnection(DataSource dataSource) throws SQLException {
-        // TODO 什么是TransactionSynchronizationManager
         ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
         if (null != conHolder && conHolder.hasConnection()) {
             return conHolder.getConnection();
         }
-        // TODO 为什么拿Connection有分支
         return fetchConnection(dataSource);
     }
 

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * 读取Transaction注解返回一个TransactionAttribute。
+ * 读取 Transaction 注解返回一个 TransactionAttribute。
  */
 public class AnnotationTransactionAttributeSource extends AbstractFallbackTransactionAttributeSource implements Serializable {
     private final boolean publicMethodsOnly;

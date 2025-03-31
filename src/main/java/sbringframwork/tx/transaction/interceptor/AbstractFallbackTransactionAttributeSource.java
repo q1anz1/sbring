@@ -45,7 +45,6 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
             }
             return txAttr;
         }
-
     }
 
     protected Object getCacheKey(Method method, Class<?> targetClass) {

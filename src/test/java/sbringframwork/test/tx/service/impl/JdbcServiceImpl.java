@@ -9,16 +9,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class JdbcServiceImpl implements JdbcService {
-
     private Statement statement;
 
-    public JdbcServiceImpl() {
-    }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void saveData(JdbcTemplate jdbcTemplate) {
         jdbcTemplate.execute("INSERT INTO users (id, name) VALUES (9, 'Jay1')");
-        jdbcTemplate.execute("INSERT INTO users (id, name) VALUES ('错误错误')");
+        jdbcTemplate.execute("INSERT INTO users (id, name) VALUES ('9,'123')");
     }
 }
